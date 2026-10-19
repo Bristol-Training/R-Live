@@ -1,0 +1,12 @@
+Package: intro-r-combined
+Title: Introduction to R and Data Analysis (combined live-coding course)
+Version: 0.0.0.9000
+Encoding: UTF-8
+Imports:
+    tidyverse,
+    palmerpenguins,
+    lme4,
+    rpart,
+    quarto,
+    knitr,
+    rmarkdown

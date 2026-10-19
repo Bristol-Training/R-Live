@@ -1,0 +1,1210 @@
+---
+title: "Introduction to R and Data Analysis"
+subtitle: "From your first line of code to machine learning, with penguins 🐧"
+author: "Jean Golding Institute"
+format:
+  revealjs:
+    theme: [default, slides.scss]
+    logo: assets/UoB_RGB_24.png
+    footer: "[Jean Golding Institute](https://www.bristol.ac.uk/golding/) © CC-BY 4.0"
+    slide-number: true
+    code-line-numbers: false
+    highlight-style: github
+    embed-resources: true
+    transition: fade
+    transition-speed: fast
+    fig-width: 8
+    fig-height: 4.5
+    fig-align: center
+execute:
+  echo: true
+  eval: false
+  warning: false
+  message: false
+---
+
+```{r}
+#| include: false
+#| eval: true
+library(palmerpenguins)
+library(tidyverse)
+library(rpart)
+
+penguins_complete <- penguins %>% drop_na()
+
+species_colours <- c(Adelie = "#ff8c00", Chinstrap = "#a034f0", Gentoo = "#159090")
+theme_set(theme_minimal(base_size = 18))
+```
+
+## Today's mission {.center}
+
+::: {.big .center}
+344 penguins.<br>One day.<br>Let's find out what makes them different.
+:::
+
+::: notes
+Set the scene: by the end of the day, attendees will have written code that answers real questions about this data, including a model that can identify a penguin's species from its measurements.
+:::
+
+## Meet the penguins
+
+:::: {.columns}
+::: {.column width="45%"}
+Palmer Archipelago, Antarctica, 2007–2009
+
+- [Adelie]{.adelie}
+- [Chinstrap]{.chinstrap}
+- [Gentoo]{.gentoo}
+
+Bill, flipper, body mass, sex, island, year
+:::
+::: {.column width="55%"}
+```{r}
+#| echo: false
+#| eval: true
+#| fig-width: 6
+#| fig-height: 5
+ggplot(penguins, aes(flipper_length_mm, body_mass_g, colour = species)) +
+  geom_point(size = 2.5, alpha = 0.7) +
+  scale_colour_manual(values = species_colours) +
+  labs(x = "Flipper length (mm)", y = "Body mass (g)", colour = NULL) +
+  theme(legend.position = "bottom")
+```
+:::
+::::
+
+## How today works
+
+:::: {.columns}
+::: {.column width="50%"}
+::: {.big}
+We code.<br>You code.
+:::
+:::
+::: {.column width="50%"}
+- Type along in **your own script**: don't just watch
+- Errors are normal. Read them out loud!
+- Stuck? Put up a sticky note / raise your hand
+- The **notes** have everything in detail, plus an exercise for each section
+:::
+::::
+
+## The journey
+
+::: {.flow}
+[Hello R]{.step} [→]{.arrow} [Variables]{.step} [→]{.arrow} [Data structures]{.step} [→]{.arrow} [Control flow]{.step}
+:::
+
+::: {.flow}
+[Packages]{.step} [→]{.arrow} [Functions]{.step} [→]{.arrow} [Reading data]{.step} [→]{.arrow} [Pipes]{.step}
+:::
+
+::: {.flow}
+[Tidy data]{.step} [→]{.arrow} [Summaries]{.step} [→]{.arrow} [Plots]{.step} [→]{.arrow} [Models & ML]{.step}
+:::
+
+::: {.center .muted}
+The first half teaches you to *program*. The second half teaches you to *analyse data*.
+:::
+
+# [01]{.section-number} Hello, R! {background-color="#3d0251"}
+
+[How do I tell a computer what to do?]{.section-question}
+
+## Console vs script
+
+:::: {.columns}
+::: {.column width="50%"}
+### Console
+Like a **calculator**
+
+Type a command, get an answer straight away. Gone when you close R.
+:::
+::: {.column width="50%"}
+### Script (`.R` file)
+Like a **recipe**
+
+Save your steps, re-run them any time, share them with others.
+:::
+::::
+
+<br>
+
+```{r filename="hello.R"}
+# Anything after a # is a comment: R ignores it
+cat("Hello, penguins!")
+```
+
+::: notes
+Live code: run `cat("Hello, R!")` in the console. Then File → New Script, save as hello.R, and run it with Ctrl/Cmd+Enter and with Source. Optionally show `Rscript hello.R` in the Terminal tab. Encourage everyone to keep ONE script open all day.
+:::
+
+## Your two best friends
+
+::: {.cards}
+::: {.card}
+**Ctrl/Cmd + Enter**
+Run the current line (or selection)
+:::
+::: {.card}
+**`# comments`**
+Explain *why*, for future you
+:::
+:::
+
+## Your turn ✍️ {background-color="#f4eef8"}
+
+::: {.your-turn}
+**Exercise 1** in the notes
+
+::: {.medium}
+Write `hello_penguins.R`: a comment, a variable holding a species name, and a greeting printed with `cat()`.
+:::
+
+::: {.muted}
+Answers are in the notes. Try it yourself first!
+:::
+:::
+
+# [02]{.section-number} Variables & types {background-color="#3d0251"}
+
+[How do I make R remember things?]{.section-question}
+
+## A variable is a labelled box
+
+```{r}
+#| eval: true
+body_mass_g <- 3750
+```
+
+::: {.flow}
+[body_mass_g]{.step .light} [←]{.arrow} [3750]{.step}
+:::
+
+::: {.center}
+Read `<-` as **"gets"**: *body_mass_g gets 3750*
+:::
+
+. . .
+
+```{r}
+#| eval: true
+body_mass_g / 1000
+```
+
+::: notes
+Show the Environment pane filling up. Shortcut for <- is Alt/Option + minus. Good names: bill_length_mm, not bl or x.
+:::
+
+## Four types you'll meet every day
+
+::: {.cards}
+::: {.card}
+**numeric**
+`39.1`
+:::
+::: {.card}
+**integer**
+`181L`
+:::
+::: {.card}
+**character**
+`"Adelie"`
+:::
+::: {.card}
+**logical**
+`TRUE` / `FALSE`
+:::
+:::
+
+<br>
+
+```{r}
+class("Adelie")          # what type is this?
+as.numeric("3750")       # convert between types
+```
+
+## Asking questions
+
+```{r}
+#| eval: true
+species <- "Gentoo"
+body_mass_g <- 5200
+
+species == "Gentoo" & body_mass_g > 5000
+```
+
+::: {.cards}
+::: {.card}
+**Maths**
+`+ - * / ^`
+:::
+::: {.card}
+**Compare**
+`== != > < >= <=`
+:::
+::: {.card}
+**Combine**
+`&` and, `|` or, `!` not
+:::
+:::
+
+## Spot the mistake
+
+::: {.bad}
+`species = "Gentoo"`  ← this **assigns**
+:::
+
+::: {.good}
+`species == "Gentoo"`  ← this **asks** "is it equal?"
+:::
+
+. . .
+
+::: {.bad}
+`"3750" + 1`  ← text, not a number: **error!**
+:::
+
+::: notes
+Run "3750" + 1 deliberately and read the error message aloud: "non-numeric argument to binary operator".
+:::
+
+## Your turn ✍️ {background-color="#f4eef8"}
+
+::: {.your-turn}
+**Exercise 2** in the notes
+
+::: {.medium}
+Describe a Gentoo penguin with variables, check their types, calculate its bill length:depth ratio, and test whether it's a Gentoo **and** heavier than 5 kg.
+:::
+
+::: {.muted}
+Answers are in the notes. Try it yourself first!
+:::
+:::
+
+# [03]{.section-number} Data structures {background-color="#3d0251"}
+
+[How do I store more than one thing?]{.section-question}
+
+## Four ways to hold data
+
+::: {.cards}
+::: {.card}
+**vector**
+One row of the **same** type
+<br>`c(3750, 3800, 3250)`
+:::
+::: {.card}
+**matrix**
+A grid of the **same** type
+<br>`matrix(1:6, nrow = 2)`
+:::
+::: {.card}
+**list**
+A bag of **anything**
+<br>`list(species = "Adelie", mass = 3750)`
+:::
+::: {.card}
+**data frame**
+A **table**: columns can differ
+<br>`data.frame(species, mass)`
+:::
+:::
+
+. . .
+
+::: {.center .medium}
+The **data frame** is the star of the show for the rest of the day ⭐
+:::
+
+## Square brackets get things out
+
+```{r}
+#| eval: true
+masses <- c(3750, 3800, 3250, 3450)
+masses[2]
+masses[2:3]
+```
+
+. . .
+
+```{r}
+#| eval: true
+df <- data.frame(species = c("Adelie", "Gentoo"), mass = c(3750, 5200))
+df[2, ]          # row 2, all columns
+df$mass          # one column
+```
+
+::: {.muted}
+Counting starts at **1** in R. `[row, column]`, and leave a side blank to get everything.
+:::
+
+## Errors are your friend
+
+```{r}
+df[, "flipper"]
+```
+
+```
+Error in `[.data.frame`(df, , "flipper"): undefined columns selected
+```
+
+::: {.flow}
+[Where it happened]{.step .light} [:]{.arrow} [What went wrong]{.step}
+:::
+
+::: {.center}
+Read the error. It's usually telling you exactly what's wrong.
+:::
+
+## Your turn ✍️ {background-color="#f4eef8"}
+
+::: {.your-turn}
+**Exercise 3** in the notes
+
+::: {.medium}
+Build a data frame of four penguins, add a `flipper_length_cm` column, and pull out the first three rows.
+:::
+
+::: {.muted}
+Answers are in the notes. Try it yourself first!
+:::
+:::
+
+# [04]{.section-number} Control flow {background-color="#3d0251"}
+
+[How do I make decisions and repeat myself?]{.section-question}
+
+## `if`: making decisions
+
+```{r}
+#| code-line-numbers: "|1|3|5"
+if (mass > 4500) {
+  cat("Large")
+} else if (mass > 3500) {
+  cat("Medium")
+} else {
+  cat("Small")
+}
+```
+
+. . .
+
+::: {.center .medium}
+R runs the **first** match, then stops looking.<br>**Most specific condition first!**
+:::
+
+::: notes
+Live code the classifier, but deliberately write the conditions in the wrong order first (mass > 3500 before mass > 4500), test with 5000, and ask the room what went wrong.
+:::
+
+## Quick quiz 🤔
+
+```{r}
+mass <- 5000
+if (mass > 3500) {
+  cat("Medium")
+} else if (mass > 4500) {
+  cat("Large")
+}
+```
+
+What gets printed?
+
+. . .
+
+::: {.big .center}
+"Medium" 😬
+:::
+
+## `for`: do it for each one
+
+:::: {.columns}
+::: {.column width="50%"}
+::: {.bad}
+Repetitive
+:::
+```{r}
+cat(masses[1] / 1000)
+cat(masses[2] / 1000)
+cat(masses[3] / 1000)
+cat(masses[4] / 1000)
+```
+:::
+::: {.column width="50%"}
+::: {.good}
+Loop
+:::
+```{r}
+for (mass in masses) {
+  cat(mass / 1000, "kg\n")
+}
+```
+:::
+::::
+
+::: {.center}
+Works for 4 penguins or 4 million.
+:::
+
+## `while`: keep going until...
+
+```{r}
+#| eval: true
+fish <- 10
+fed <- 0
+while (fish >= 3) {
+  fish <- fish - 3
+  fed <- fed + 1
+}
+cat("Fed", fed, "penguins")
+```
+
+::: {.muted}
+Make sure the condition can become `FALSE`, or it runs forever! (Press **Esc** to stop it.)
+:::
+
+## Your turn ✍️ {background-color="#f4eef8"}
+
+::: {.your-turn}
+**Exercise 4** in the notes
+
+::: {.medium}
+Write `classify.R`: loop over 10 body masses, label each one *very large / large / medium / small*, and count the large ones.
+:::
+
+::: {.muted}
+Answers are in the notes. Try it yourself first!
+:::
+:::
+
+# [05]{.section-number} Packages {background-color="#3d0251"}
+
+[How do I use code that other people have written?]{.section-question}
+
+## Packages are like apps
+
+:::: {.columns}
+::: {.column width="50%"}
+### 📥 Install: **once**
+```{r}
+install.packages("palmerpenguins")
+```
+Like downloading an app
+:::
+::: {.column width="50%"}
+### 📂 Load: **every session**
+```{r}
+library(palmerpenguins)
+```
+Like opening the app
+:::
+::::
+
+<br>
+
+::: {.center .muted}
+Thousands of free packages on **CRAN**. Find them at [rseek.org](https://rseek.org).
+:::
+
+## Say hello to the data
+
+```{r}
+#| eval: true
+#| output-location: fragment
+penguins
+```
+
+::: notes
+Also show str(penguins), summary(penguins) and ?penguins. On R ≥ 4.5, point out the masking message: base R has its own datasets::penguins with different column names, and the package loaded last wins. palmerpenguins::penguins always means this package's version.
+:::
+
+## The `tidyverse`
+
+::: {.center}
+A family of packages that work together for data science
+:::
+
+```{r}
+library(tidyverse)
+```
+
+::: {.cards}
+::: {.card}
+**readr**
+read files
+:::
+::: {.card}
+**dplyr**
+manipulate
+:::
+::: {.card}
+**tidyr**
+tidy up
+:::
+::: {.card}
+**ggplot2**
+plot
+:::
+::: {.card}
+**stringr**
+text
+:::
+::: {.card}
+**forcats**
+categories
+:::
+:::
+
+## Your turn ✍️ {background-color="#f4eef8"}
+
+::: {.your-turn}
+**Exercise 5** in the notes
+
+::: {.medium}
+Explore `?penguins` and `summary(penguins)`. How many penguins have a missing sex?
+:::
+
+::: {.muted}
+Answers are in the notes. Try it yourself first!
+:::
+:::
+
+# [06]{.section-number} Functions {background-color="#3d0251"}
+
+[How do I write code I can reuse?]{.section-question}
+
+## A function is a machine
+
+::: {.flow}
+[inputs (arguments)]{.step .light} [→]{.arrow} [function]{.step} [→]{.arrow} [output (return value)]{.step .light}
+:::
+
+<br>
+
+```{r}
+#| eval: true
+mean(c(3750, 3800, 3250))
+```
+
+::: {.center}
+You've been using functions all along: `cat()`, `c()`, `class()`, `mean()`...
+:::
+
+## Building your own
+
+```{r}
+#| code-line-numbers: "|1|2-7|8"
+calculate_mean <- function(values) {
+  total <- 0
+  count <- 0
+  for (value in values) {
+    total <- total + value
+    count <- count + 1
+  }
+  return(total / count)
+}
+```
+
+::: {.flow}
+[name]{.step .light} [←]{.arrow} [function(arguments)]{.step} [→]{.arrow} [{ body }]{.step} [→]{.arrow} [return()]{.step .light}
+:::
+
+::: notes
+Live code it, then call it on penguins$body_mass_g: it returns NA because of missing values. That motivates the next slide.
+:::
+
+## When things go wrong
+
+:::: {.columns}
+::: {.column width="50%"}
+### 🛑 `stop()`
+Halt with a clear error
+
+```{r}
+if (!is.numeric(value)) {
+  stop("I need numbers!")
+}
+```
+:::
+::: {.column width="50%"}
+### ⚠️ `warning()`
+Carry on, but tell the user
+
+```{r}
+if (is.na(value)) {
+  warning("Skipping an NA")
+}
+```
+:::
+::::
+
+<br>
+
+::: {.center .muted}
+`NA` means "missing value". Many functions skip them with `na.rm = TRUE`.
+:::
+
+## Your turn ✍️ {background-color="#f4eef8"}
+
+::: {.your-turn}
+**Exercise 6** in the notes
+
+::: {.medium}
+Write `calculate_max()`. Make it **warn** on missing values and **stop** if there's nothing left.
+:::
+
+::: {.muted}
+Answers are in the notes. Try it yourself first!
+:::
+:::
+
+# [07]{.section-number} Reading data {background-color="#3d0251"}
+
+[How do I get my data into R?]{.section-question}
+
+## From file to table
+
+```{r}
+penguins_file <- path_to_file("penguins.csv")   # a CSV that ships with the package
+
+read.csv(penguins_file)   # base R  → data.frame
+read_csv(penguins_file)   # readr   → tibble ✨
+```
+
+::: {.center}
+Packages can ship **files** as well as functions!
+:::
+
+## Real data is messy
+
+```
+Palmer penguins data
+Exported for the JGI R course.
+A -1 signifies a missing value.
+
+species;island;bill_length_mm;bill_depth_mm;...
+Adelie;Torgersen;39.1;18.7;181;3750;male;2007
+Adelie;Torgersen;-1;-1;-1;-1;-1;2007
+```
+
+. . .
+
+::: {.center .medium}
+Three problems: 📝 header text, ➗ semicolons, ❓ `-1` = missing
+:::
+
+## Fix it one step at a time
+
+```{r}
+#| code-line-numbers: "|2|3|4|5"
+read_delim(messy_file,
+           skip = 4,                               # 📝 skip the header text
+           delim = ";",                            # ➗ split on semicolons
+           na = "-1",                              # ❓ -1 means missing
+           col_types = cols(year = col_integer())) # set column types
+```
+
+::: notes
+Write the messy file live (see notes, section "Dealing with messy files"), open it in RStudio, then fix it ONE argument at a time, re-running after each. This is the key teaching point of the section.
+:::
+
+## Your turn ✍️ {background-color="#f4eef8"}
+
+::: {.your-turn}
+**Exercise 7** in the notes
+
+::: {.medium}
+Read `penguins_raw.csv` and find the mean `Culmen Length (mm)`. (Watch out for those column names!)
+:::
+
+::: {.muted}
+Answers are in the notes. Try it yourself first!
+:::
+:::
+
+# [08]{.section-number} Tibbles & the pipe {background-color="#3d0251"}
+
+[How do I ask questions of my data?]{.section-question}
+
+## The pipe `%>%` means "and then"
+
+::: {.medium}
+Take the penguins, **and then** keep the female Adelies, **and then** add mass in kg, **and then** sort.
+:::
+
+```{r}
+#| code-line-numbers: "|1|2|3|4"
+penguins %>%
+  filter(species == "Adelie", sex == "female") %>%
+  mutate(body_mass_kg = body_mass_g / 1000) %>%
+  arrange(desc(body_mass_kg))
+```
+
+::: {.muted}
+Shortcut: **Ctrl/Cmd + Shift + M**. You may also see R's built-in pipe `|>`, which works the same way.
+:::
+
+::: notes
+Build this one line at a time, running after each %>%. This habit is the most valuable thing to model all day.
+:::
+
+## Five verbs to rule them all
+
+::: {.cards}
+::: {.card}
+**`filter()`**
+keep **rows**
+:::
+::: {.card}
+**`select()`**
+keep **columns**
+:::
+::: {.card}
+**`mutate()`**
+make **new columns**
+:::
+::: {.card}
+**`arrange()`**
+**sort** rows
+:::
+::: {.card}
+**`rename()`**
+`new = old`
+:::
+:::
+
+<br>
+
+```{r}
+penguins %>% select(species, island, body_mass_g)
+```
+
+## Your turn ✍️ {background-color="#f4eef8"}
+
+::: {.your-turn}
+**Exercise 8** in the notes
+
+::: {.medium}
+How many Chinstraps have flippers ≥ 200 mm? Which 5 penguins have the longest bills?
+:::
+
+::: {.muted}
+Answers are in the notes. Try it yourself first!
+:::
+:::
+
+# [09]{.section-number} Tidy data {background-color="#3d0251"}
+
+[What shape should my data be?]{.section-question}
+
+## Three rules of tidy data
+
+::: {.cards}
+::: {.card}
+**1. Columns**
+Each variable has its own column
+:::
+::: {.card}
+**2. Rows**
+Each observation has its own row
+:::
+::: {.card}
+**3. Cells**
+Each value has its own cell
+:::
+:::
+
+<br>
+
+::: {.center .medium}
+Tidy data in → easy analysis and plotting out
+:::
+
+## Reshaping with `pivot_longer()`
+
+:::: {.columns}
+::: {.column width="42%"}
+<table class="mini">
+<tr><th>id</th><th>bill_length</th><th>bill_depth</th></tr>
+<tr><td>1</td><td>39.1</td><td>18.7</td></tr>
+<tr><td>2</td><td>39.5</td><td>17.4</td></tr>
+</table>
+:::
+::: {.column width="16%"}
+::: {.big .center}
+→
+:::
+:::
+::: {.column width="42%"}
+<table class="mini">
+<tr><th>id</th><th>measurement</th><th>mm</th></tr>
+<tr><td>1</td><td>bill_length</td><td>39.1</td></tr>
+<tr><td>1</td><td>bill_depth</td><td>18.7</td></tr>
+<tr><td>2</td><td>bill_length</td><td>39.5</td></tr>
+<tr><td>2</td><td>bill_depth</td><td>17.4</td></tr>
+</table>
+:::
+::::
+
+```{r}
+penguins %>%
+  pivot_longer(c(bill_length_mm, bill_depth_mm),
+               names_to = "measurement", values_to = "mm")
+```
+
+::: {.muted}
+`pivot_wider()` goes back. `drop_na()` removes missing values. `factor()` sets category order.
+:::
+
+## Your turn ✍️ {background-color="#f4eef8"}
+
+::: {.your-turn}
+**Exercise 9** in the notes
+
+::: {.medium}
+How many rows does `drop_na()` remove? Pivot the bill measurements longer. How many rows now?
+:::
+
+::: {.muted}
+Answers are in the notes. Try it yourself first!
+:::
+:::
+
+# [10]{.section-number} Data analysis {background-color="#3d0251"}
+
+[Which penguins are heaviest?]{.section-question}
+
+## Group, then summarise
+
+```{r}
+#| eval: true
+#| code-line-numbers: "|2|3"
+penguins %>%
+  group_by(species) %>%
+  summarise(mean_mass = mean(body_mass_g, na.rm = TRUE), n = n())
+```
+
+. . .
+
+::: {.center .medium}
+[Gentoo]{.gentoo} penguins are over 1 kg heavier on average!
+:::
+
+## Filter → group → summarise
+
+::: {.flow}
+[filter()]{.step} [→]{.arrow} [group_by()]{.step} [→]{.arrow} [summarise()]{.step}
+:::
+
+```{r}
+#| eval: true
+penguins %>%
+  drop_na(sex) %>%
+  group_by(species, sex) %>%
+  summarise(mean_mass = mean(body_mass_g), .groups = "drop")
+```
+
+## Your turn ✍️ {background-color="#f4eef8"}
+
+::: {.your-turn}
+**Exercise 10** in the notes
+
+::: {.medium}
+For each species: mean, min and max flipper length. Which island has the heaviest Adelies?
+:::
+
+::: {.muted}
+Answers are in the notes. Try it yourself first!
+:::
+:::
+
+# [11]{.section-number} Plotting {background-color="#3d0251"}
+
+[How do I see what's going on?]{.section-question}
+
+## The grammar of graphics
+
+::: {.flow}
+[data]{.step} [+]{.arrow} [aesthetics: aes(x, y, colour)]{.step} [+]{.arrow} [layers: geom_...()]{.step}
+:::
+
+```{r}
+#| eval: true
+#| output-location: column
+#| fig-width: 6
+#| fig-height: 5
+#| code-line-numbers: "|1|2-4|5|6"
+ggplot(penguins,
+       aes(x = flipper_length_mm,
+           y = body_mass_g,
+           colour = species)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+```
+
+::: notes
+Build it layer by layer: data + aes alone gives an empty plot! Then add geom_point, then colour, then geom_smooth. Move colour into geom_point() to show global vs layer aesthetics. Common error: using %>% instead of + between layers.
+:::
+
+## Pick the right geom
+
+```{r}
+#| echo: false
+#| eval: true
+#| fig-width: 5
+#| fig-height: 4.5
+#| layout-ncol: 3
+base <- list(scale_fill_manual(values = species_colours),
+             theme(legend.position = "none"), labs(x = NULL, y = NULL))
+ggplot(penguins, aes(body_mass_g, fill = species)) +
+  geom_histogram(binwidth = 200, alpha = 0.7, position = "identity") +
+  labs(title = "geom_histogram()") + base
+ggplot(penguins, aes(species, body_mass_g, fill = species)) +
+  geom_boxplot() + labs(title = "geom_boxplot()") + base
+ggplot(penguins, aes(species, body_mass_g, fill = species)) +
+  geom_violin() + labs(title = "geom_violin()") + base
+```
+
+::: {.center .muted}
+Same data, different questions. Swap the `geom`, keep everything else. Then `ggsave("plot.png")` to save it.
+:::
+
+## Do longer bills mean deeper bills?
+
+```{r}
+#| echo: false
+#| eval: true
+#| fig-width: 9
+#| fig-height: 5
+ggplot(penguins, aes(bill_length_mm, bill_depth_mm)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", colour = "black") +
+  labs(x = "Bill length (mm)", y = "Bill depth (mm)")
+```
+
+::: {.center .medium}
+Looks like... **no**? Longer bills are *shallower*.
+:::
+
+## Look again...
+
+```{r}
+#| echo: false
+#| eval: true
+#| fig-width: 9
+#| fig-height: 5
+ggplot(penguins, aes(bill_length_mm, bill_depth_mm, colour = species)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm") +
+  scale_colour_manual(values = species_colours) +
+  labs(x = "Bill length (mm)", y = "Bill depth (mm)", colour = NULL)
+```
+
+::: {.center .medium}
+Within **every** species, longer bills are *deeper*. This is **Simpson's paradox** 🤯
+:::
+
+::: notes
+This is the "wow" moment of the plotting section. Ask the room to predict before revealing. Lesson: always look at your groups. It comes back in the modelling exercise.
+:::
+
+## Your turn ✍️ {background-color="#f4eef8"}
+
+::: {.your-turn}
+**Exercise 11** in the notes
+
+::: {.medium}
+Plot flipper length against bill length, coloured by species with a line for each. Then facet histograms of flipper length by species, add labels and a theme, and `ggsave()` it.
+:::
+
+::: {.muted}
+Answers are in the notes. Try it yourself first!
+:::
+:::
+
+# [12]{.section-number} Models & machine learning {background-color="#3d0251"}
+
+[Can we predict a penguin's weight, or even its species?]{.section-question}
+
+## From pictures to numbers
+
+```{r}
+#| eval: true
+model <- lm(body_mass_g ~ flipper_length_mm, data = penguins_complete)
+coef(model)
+```
+
+. . .
+
+::: {.big .center}
++1 mm of flipper ≈ +50 g of penguin
+:::
+
+::: {.center .muted}
+Formula: `outcome ~ predictors`. Then use `summary()`, `confint()`, `anova()`, `predict()`.
+:::
+
+## The modelling toolbox
+
+::: {.cards}
+::: {.card}
+**`lm()`**
+A number outcome<br>*"How heavy?"*
+:::
+::: {.card}
+**`glm(family = binomial)`**
+A yes/no outcome<br>*"Male or female?"*
+:::
+::: {.card}
+**`lme4::lmer()`**
+Grouped data<br>*`(1 | species)` gives each group its own baseline*
+:::
+:::
+
+<br>
+
+```{r}
+lm(body_mass_g ~ flipper_length_mm + species + sex, data = penguins_complete)
+```
+
+::: {.muted}
+Same formula style for all of them. Add predictors with `+`.
+:::
+
+## Machine learning: two flavours
+
+:::: {.columns}
+::: {.column width="50%"}
+### 🔍 Unsupervised
+*No answers given.* Find the groups yourself.
+
+`prcomp()` · `kmeans()`
+:::
+::: {.column width="50%"}
+### 🎓 Supervised
+*Learn from examples*, then predict new ones.
+
+`rpart()` decision trees
+:::
+::::
+
+## Can the computer find the species?
+
+```{r}
+#| echo: false
+#| eval: true
+#| fig-width: 9
+#| fig-height: 5
+scaled <- penguins_complete %>%
+  select(bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g) %>%
+  scale()
+pca <- prcomp(scaled)
+set.seed(42)
+km <- kmeans(scaled, centers = 3, nstart = 25)
+as_tibble(pca$x) %>%
+  mutate(species = penguins_complete$species, cluster = factor(km$cluster)) %>%
+  ggplot(aes(PC1, PC2, colour = species, shape = cluster)) +
+  geom_point(size = 2.5, alpha = 0.8) +
+  scale_colour_manual(values = species_colours) +
+  labs(colour = "True species", shape = "k-means cluster")
+```
+
+::: {.center .muted}
+PCA squashes 4 measurements into 2 dimensions; k-means finds 3 clusters **without being told the species**.
+:::
+
+## Teach a computer to identify penguins
+
+```{r}
+#| eval: true
+#| echo: false
+set.seed(42)
+train_rows <- sample(1:nrow(penguins_complete), round(0.7 * nrow(penguins_complete)))
+tree <- rpart(species ~ bill_length_mm + bill_depth_mm + flipper_length_mm + body_mass_g,
+              data = penguins_complete[train_rows, ], method = "class")
+accuracy <- mean(predict(tree, penguins_complete[-train_rows, ], type = "class") ==
+                   penguins_complete$species[-train_rows])
+```
+
+:::: {.columns}
+::: {.column width="55%"}
+```{r}
+tree <- rpart(species ~ bill_length_mm +
+                bill_depth_mm +
+                flipper_length_mm,
+              data = train)
+
+predict(tree, test, type = "class")
+```
+
+::: {.muted}
+Train on 70%, test on the 30% it has **never seen**. Use `set.seed()` so results are reproducible.
+:::
+:::
+::: {.column width="45%"}
+::: {.fragment}
+Accuracy on unseen penguins:
+
+::: {.big .center}
+`r sprintf("%.0f%%", 100 * accuracy)` 🎉
+:::
+:::
+:::
+::::
+
+## Your turn ✍️ {background-color="#f4eef8"}
+
+::: {.your-turn}
+**Exercise 12** in the notes
+
+::: {.medium}
+Model bill depth against bill length with and without `species`: what happens to the slope? Then build a decision tree using bill measurements only.
+:::
+
+::: {.muted}
+Answers are in the notes. Try it yourself first!
+:::
+:::
+
+# Wrapping up {background-color="#3d0251"}
+
+## Look how far you've come
+
+::: {.flow}
+[cat("Hello, R!")]{.step .light} [→]{.arrow} [variables & loops]{.step} [→]{.arrow} [functions]{.step} [→]{.arrow} [tidy data]{.step} [→]{.arrow} [plots]{.step} [→]{.arrow} [machine learning]{.step .light}
+:::
+
+<br>
+
+::: {.center .medium}
+You don't need to remember it all.<br>**Keep practising**, and keep the notes handy. They're yours to keep.
+:::
+
+## Where next?
+
+::: {.cards}
+::: {.card}
+**R for Data Science (2e)**
+[r4ds.hadley.nz](https://r4ds.hadley.nz/)
+:::
+::: {.card}
+**ggplot2 book**
+[ggplot2-book.org](https://ggplot2-book.org)
+:::
+::: {.card}
+**Cheat sheets**
+[posit.co/resources/cheatsheets](https://posit.co/resources/cheatsheets/)
+:::
+::: {.card}
+**Statistical learning**
+[statlearning.com](https://www.statlearning.com/)
+:::
+:::
+
+<br>
+
+::: {.big .center}
+Thank you! Questions? 🐧
+:::
