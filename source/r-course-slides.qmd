@@ -32,9 +32,14 @@ library(rpart)
 
 penguins_complete <- penguins %>% drop_na()
 
-species_colours <- c(Adelie = "#ff8c00", Chinstrap = "#a034f0", Gentoo = "#159090")
+species_colours <- c(
+  Adelie = "#ff8c00",
+  Chinstrap = "#a034f0",
+  Gentoo = "#159090"
+)
 theme_set(theme_minimal(base_size = 18))
 ```
+
 
 ## Today's mission {.center}
 
@@ -45,6 +50,23 @@ theme_set(theme_minimal(base_size = 18))
 ::: notes
 Set the scene: by the end of the day, attendees will have written code that answers real questions about this data, including a model that can identify a penguin's species from its measurements.
 :::
+
+## Meet the penguins
+
+:::: {.columns}
+::: {.column width="45%"}
+Palmer Archipelago, Antarctica, 2007–2009
+
+- [Adelie]{.adelie}
+- [Chinstrap]{.chinstrap}
+- [Gentoo]{.gentoo}
+
+Bill, flipper, body mass, sex, island, year
+:::
+::: {.column width="55%"}
+![](https://allisonhorst.github.io/palmerpenguins/reference/figures/lter_penguins.png){fig-alt="Illustration of the three penguin species: Chinstrap, Gentoo and Adélie"}
+:::
+::::
 
 ## Meet the penguins
 
@@ -220,8 +242,8 @@ Show the Environment pane filling up. Shortcut for <- is Alt/Option + minus. Goo
 <br>
 
 ```{r}
-class("Adelie")          # what type is this?
-as.numeric("3750")       # convert between types
+class("Adelie") # what type is this?
+as.numeric("3750") # convert between types
 ```
 
 ## Asking questions
@@ -332,8 +354,8 @@ masses[2:3]
 ```{r}
 #| eval: true
 df <- data.frame(species = c("Adelie", "Gentoo"), mass = c(3750, 5200))
-df[2, ]          # row 2, all columns
-df$mass          # one column
+df[2, ] # row 2, all columns
+df$mass # one column
 ```
 
 ::: {.muted}
@@ -667,10 +689,10 @@ Answers are in the notes. Try it yourself first!
 ## From file to table
 
 ```{r}
-penguins_file <- path_to_file("penguins.csv")   # a CSV that ships with the package
+penguins_file <- path_to_file("penguins.csv") # a CSV that ships with the package
 
-read.csv(penguins_file)   # base R  → data.frame
-read_csv(penguins_file)   # readr   → tibble ✨
+read.csv(penguins_file) # base R  → data.frame
+read_csv(penguins_file) # readr   → tibble ✨
 ```
 
 ::: {.center}
@@ -699,11 +721,13 @@ Three problems: 📝 header text, ➗ semicolons, ❓ `-1` = missing
 
 ```{r}
 #| code-line-numbers: "|2|3|4|5"
-read_delim(messy_file,
-           skip = 4,                               # 📝 skip the header text
-           delim = ";",                            # ➗ split on semicolons
-           na = "-1",                              # ❓ -1 means missing
-           col_types = cols(year = col_integer())) # set column types
+read_delim(
+  messy_file,
+  skip = 4, # 📝 skip the header text
+  delim = ";", # ➗ split on semicolons
+  na = "-1", # ❓ -1 means missing
+  col_types = cols(year = col_integer())
+) # set column types
 ```
 
 ::: notes
@@ -850,8 +874,11 @@ Tidy data in → easy analysis and plotting out
 
 ```{r}
 penguins %>%
-  pivot_longer(c(bill_length_mm, bill_depth_mm),
-               names_to = "measurement", values_to = "mm")
+  pivot_longer(
+    c(bill_length_mm, bill_depth_mm),
+    names_to = "measurement",
+    values_to = "mm"
+  )
 ```
 
 ::: {.muted}
@@ -936,10 +963,10 @@ Answers are in the notes. Try it yourself first!
 #| fig-width: 6
 #| fig-height: 5
 #| code-line-numbers: "|1|2-4|5|6"
-ggplot(penguins,
-       aes(x = flipper_length_mm,
-           y = body_mass_g,
-           colour = species)) +
+ggplot(
+  penguins,
+  aes(x = flipper_length_mm, y = body_mass_g, colour = species)
+) +
   geom_point() +
   geom_smooth(method = "lm")
 ```
@@ -956,15 +983,23 @@ Build it layer by layer: data + aes alone gives an empty plot! Then add geom_poi
 #| fig-width: 5
 #| fig-height: 4.5
 #| layout-ncol: 3
-base <- list(scale_fill_manual(values = species_colours),
-             theme(legend.position = "none"), labs(x = NULL, y = NULL))
+base <- list(
+  scale_fill_manual(values = species_colours),
+  theme(legend.position = "none"),
+  labs(x = NULL, y = NULL)
+)
 ggplot(penguins, aes(body_mass_g, fill = species)) +
   geom_histogram(binwidth = 200, alpha = 0.7, position = "identity") +
-  labs(title = "geom_histogram()") + base
+  labs(title = "geom_histogram()") +
+  base
 ggplot(penguins, aes(species, body_mass_g, fill = species)) +
-  geom_boxplot() + labs(title = "geom_boxplot()") + base
+  geom_boxplot() +
+  labs(title = "geom_boxplot()") +
+  base
 ggplot(penguins, aes(species, body_mass_g, fill = species)) +
-  geom_violin() + labs(title = "geom_violin()") + base
+  geom_violin() +
+  labs(title = "geom_violin()") +
+  base
 ```
 
 ::: {.center .muted}
@@ -1121,20 +1156,30 @@ PCA squashes 4 measurements into 2 dimensions; k-means finds 3 clusters **withou
 #| eval: true
 #| echo: false
 set.seed(42)
-train_rows <- sample(1:nrow(penguins_complete), round(0.7 * nrow(penguins_complete)))
-tree <- rpart(species ~ bill_length_mm + bill_depth_mm + flipper_length_mm + body_mass_g,
-              data = penguins_complete[train_rows, ], method = "class")
-accuracy <- mean(predict(tree, penguins_complete[-train_rows, ], type = "class") ==
-                   penguins_complete$species[-train_rows])
+train_rows <- sample(
+  1:nrow(penguins_complete),
+  round(0.7 * nrow(penguins_complete))
+)
+tree <- rpart(
+  species ~ bill_length_mm + bill_depth_mm + flipper_length_mm + body_mass_g,
+  data = penguins_complete[train_rows, ],
+  method = "class"
+)
+accuracy <- mean(
+  predict(tree, penguins_complete[-train_rows, ], type = "class") ==
+    penguins_complete$species[-train_rows]
+)
 ```
 
 :::: {.columns}
 ::: {.column width="55%"}
 ```{r}
-tree <- rpart(species ~ bill_length_mm +
-                bill_depth_mm +
-                flipper_length_mm,
-              data = train)
+tree <- rpart(
+  species ~ bill_length_mm +
+    bill_depth_mm +
+    flipper_length_mm,
+  data = train
+)
 
 predict(tree, test, type = "class")
 ```

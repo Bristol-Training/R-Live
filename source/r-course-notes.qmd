@@ -74,7 +74,7 @@ R is a popular *programming language* among researchers, data scientists and sta
 
 ![](https://allisonhorst.github.io/palmerpenguins/reference/figures/lter_penguins.png){fig-alt="Illustration of the three penguin species: Chinstrap, Gentoo and Adélie" width=80%}
 
-We use one dataset all the way through the course: the [Palmer Penguins](https://allisonhorst.github.io/palmerpenguins/). It contains measurements of **344 penguins** of **three species** (Adélie, Chinstrap and Gentoo), recorded on **three islands** (Biscoe, Dream and Torgersen) in the Palmer Archipelago, Antarctica, between 2007 and 2009.
+We use one dataset all the way through the course: the [Palmer Penguins](https://allisonhorst.github.io/palmerpenguins/). It contains measurements of **344 penguins** of **three species** (Adélie, Chinstrap and Gentoo), recorded on **three islands** (Biscoe, Dream and Torgersen) in the Palmer Archipelago, Antarctica, between 2007 and 2009. Artwork by @allison_horst.
 
 | Column | Description |
 |---|---|
@@ -2808,6 +2808,6 @@ This course has been developed by the [Jean Golding Institute](https://www.brist
 
 Parts of these materials were originally written by Christopher Woods ([https://chryswoods.com/beginning_r/](https://chryswoods.com/beginning_r/) and [https://chryswoods.com/intermediate_r/](https://chryswoods.com/intermediate_r/)), based in part on *Introduction to Data Analysis in Python* by Matt Williams ([https://milliams.com/courses/data_analysis_python/](https://milliams.com/courses/data_analysis_python/)).
 
-The Palmer penguins data were collected and made available by Dr. Kristen Gorman and the Palmer Station Long Term Ecological Research Program, and packaged by Allison Horst, Alison Hill and Kristen Gorman.
+The Palmer penguins data were collected and made available by Dr. Kristen Gorman and the Palmer Station Long Term Ecological Research Program, and packaged by Allison Horst, Alison Hill and Kristen Gorman. Artwork by @allison_horst.
 
 [Jean Golding Institute](https://www.bristol.ac.uk/golding/) © [CC-BY 4.0](http://creativecommons.org/licenses/by/4.0/)
