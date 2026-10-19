@@ -20,6 +20,52 @@ execute:
 
 ![](assets/UoB_RGB_24.png){width=220px fig-alt="University of Bristol logo"}
 
+<!-- Course website hub: only rendered for the GitHub Pages build (render.R sets site: true) -->
+::: {.content-visible when-meta="site"}
+## About this page {.unnumbered .unlisted}
+
+Everything you need for the course is on this page. The slides we use during the session are just below, followed by links to further material, and then the full course notes with every exercise and answer. Bookmark this page so you can come back to it after the course.
+
+::: {.slides-embed}
+```{=html}
+<iframe id="slides-frame" src="slides.html" title="Course slides" allowfullscreen></iframe>
+```
+:::
+
+::: {.hub-buttons}
+```{=html}
+<button type="button" class="btn hub-btn" onclick="document.getElementById('slides-frame').requestFullscreen()">⛶ Full screen</button>
+<a class="btn hub-btn" href="slides.html" target="_blank" rel="noopener">Open slides in a new tab</a>
+```
+:::
+
+Click on the slides, then use the arrow keys to move through them.
+
+### Course materials {.unnumbered .unlisted}
+
+::: {.cards .hub-cards}
+::: {.card}
+**[Instructor version](instructor.html)**<br>
+These notes plus the delivery team's guidance: timings, live-coding cues and common pitfalls.
+:::
+
+::: {.card}
+**[Intro to R (Part 1)](https://bristol-training.github.io/intro-r-1/)**<br>
+The full-length JGI course.
+:::
+
+::: {.card}
+**[Intro to R (Part 2)](https://bristol-training.github.io/intro-r-2/)**<br>
+The full-length JGI course.
+:::
+
+::: {.card}
+**[Introduction to Data Analysis in R](https://bristol-training.github.io/intro-data-analysis-r/)**<br>
+The full-length JGI course.
+:::
+:::
+:::
+
 # Introduction {.unnumbered}
 
 Welcome to this course on R programming and data analysis! This course combines the Jean Golding Institute's *Intro to R (Part 1)*, *Intro to R (Part 2)* and *Introduction to Data Analysis in R* into a single journey. It starts with your very first line of R and ends with fitting statistical models and a first taste of machine learning.
@@ -44,13 +90,13 @@ Each section starts with a question about the penguins, and teaches you the R yo
 
 The first half teaches you to *program*; the second half teaches you to *analyse data*.
 
-### How to get the most out of this course
+### How to get the most out of this course {.unnumbered}
 
 - **Type the code yourself** in your own script, rather than copying and pasting. Your fingers learn as much as your brain.
 - **Errors are normal.** Everyone gets them, all the time. Read them carefully: they usually tell you exactly what's wrong.
 - **Experiment.** Change a number, swap a column, break something on purpose and see what happens.
 
-### Intended learning outcomes
+### Intended learning outcomes {.unnumbered}
 
 By the end of this course, you will:
 
@@ -64,7 +110,7 @@ By the end of this course, you will:
 - Be able to visualise data with `ggplot2`.
 - Be able to fit and interpret simple statistical models, and try some basic machine learning.
 
-## How to read this document
+## How to read this document {.unnumbered}
 
 In this documentation, any time that we are seeing a small snippet of R code, we'll see it written in a grey box like the following:
 
@@ -140,7 +186,7 @@ For a two-day delivery, split after section 6. Leave ~10 minutes per section for
 :::
 :::
 
-## Workspace setup
+## Workspace setup {.unnumbered}
 
 **Please follow our [installation instructions](https://bristol-training.github.io/data-science-project-setup/)** to install R and RStudio.
 
@@ -173,7 +219,8 @@ R
 
 ```{r filename="Terminal/Command Prompt"}
 #| echo: false
-cat("R version 4.5.2 (2025-10-31) -- \"[Not] Part in a Rumble\"
+cat(
+  "R version 4.5.2 (2025-10-31) -- \"[Not] Part in a Rumble\"
 Copyright (C) 2025 The R Foundation for Statistical Computing
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -184,7 +231,8 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> ")
+> "
+)
 ```
 
 - At the prompt, type a simple R command like `print("Hello, R!")` or `cat("Hello, R!")`. Press *Enter* to execute the command. You should see "Hello, R!" printed on the screen.
@@ -380,7 +428,13 @@ You can check the type of any variable with the `class()` function:
 ```{r}
 cat("species:", species, "-", class(species), "\n")
 cat("bill_length_mm:", bill_length_mm, "-", class(bill_length_mm), "\n")
-cat("flipper_length_mm:", flipper_length_mm, "-", class(flipper_length_mm), "\n")
+cat(
+  "flipper_length_mm:",
+  flipper_length_mm,
+  "-",
+  class(flipper_length_mm),
+  "\n"
+)
 cat("is_female:", is_female, "-", class(is_female), "\n")
 ```
 
@@ -455,8 +509,16 @@ Logical OR (single value)   | `\|\|`    | `(a > b) \|\| (a < c)`
 Logical NOT                 | `!`       | `!(a > b)`
 
 ```{r}
-cat("Adelie AND heavier than 4 kg?", species == "Adelie" & body_mass_g > 4000, "\n")
-cat("Adelie OR heavier than 4 kg?", species == "Adelie" | body_mass_g > 4000, "\n")
+cat(
+  "Adelie AND heavier than 4 kg?",
+  species == "Adelie" & body_mass_g > 4000,
+  "\n"
+)
+cat(
+  "Adelie OR heavier than 4 kg?",
+  species == "Adelie" | body_mass_g > 4000,
+  "\n"
+)
 cat("NOT female?", !is_female, "\n")
 ```
 
@@ -597,17 +659,15 @@ Matrices are two-dimensional arrays whose elements are all the **same data type*
 
 ```{r}
 # bill length and bill depth (columns) for three penguins (rows)
-bills <- matrix(c(39.1, 46.5, 50.0,
-                  18.7, 17.9, 15.2),
-                nrow = 3, ncol = 2)
+bills <- matrix(c(39.1, 46.5, 50.0, 18.7, 17.9, 15.2), nrow = 3, ncol = 2)
 bills
 ```
 
 Elements are accessed with `[row, column]`, and leaving a position empty selects everything:
 
 ```{r}
-bills[2, 1]   # second penguin's bill length
-bills[, 2]    # all bill depths
+bills[2, 1] # second penguin's bill length
+bills[, 2] # all bill depths
 ```
 
 `rbind()` adds rows and `cbind()` adds columns:
@@ -678,9 +738,13 @@ penguins_df
 New rows are added with `rbind()`, using another data frame with the same columns:
 
 ```{r}
-new_penguin <- data.frame(species = "Adelie", bill_length_mm = 37.8,
-                          body_mass_g = 3400, is_female = TRUE,
-                          body_mass_kg = 3.4)
+new_penguin <- data.frame(
+  species = "Adelie",
+  bill_length_mm = 37.8,
+  body_mass_g = 3400,
+  is_female = TRUE,
+  body_mass_kg = 3.4
+)
 penguins_df <- rbind(penguins_df, new_penguin)
 penguins_df
 ```
@@ -792,7 +856,7 @@ The basic syntax is `if (condition) { ... }`, where `condition` evaluates to `TR
 body_mass_g <- 4750
 
 if (body_mass_g > 4000) {
-    cat("This is a large penguin")
+  cat("This is a large penguin")
 }
 ```
 
@@ -802,11 +866,11 @@ An `else` clause specifies code to run when the condition is `FALSE`, and `else 
 body_mass_g <- 3600
 
 if (body_mass_g > 4500) {
-    cat("Large penguin")
+  cat("Large penguin")
 } else if (body_mass_g > 3500) {
-    cat("Medium penguin")
+  cat("Medium penguin")
 } else {
-    cat("Small penguin")
+  cat("Small penguin")
 }
 ```
 
@@ -839,9 +903,9 @@ R works down the chain of `if`, `else if` and `else` and runs the **first** bloc
 body_mass_g <- 5000
 
 if (body_mass_g > 3500) {
-    cat("Medium penguin")
+  cat("Medium penguin")
 } else if (body_mass_g > 4500) {
-    cat("Large penguin")
+  cat("Large penguin")
 }
 ```
 
@@ -860,7 +924,7 @@ species <- "Gentoo"
 body_mass_g <- 5200
 
 if (species == "Gentoo" & body_mass_g > 5000) {
-    cat("A heavy Gentoo")
+  cat("A heavy Gentoo")
 }
 ```
 
@@ -886,7 +950,7 @@ which in R is a `for` loop:
 
 ```{r}
 for (name in species) {
-    cat(name, "\n")
+  cat(name, "\n")
 }
 ```
 
@@ -897,7 +961,7 @@ body_masses <- c(3750, 3800, 3250, 3450, 3650)
 
 total <- 0
 for (mass in body_masses) {
-    total <- total + mass
+  total <- total + mass
 }
 cat("Total body mass:", total, "g")
 ```
@@ -942,7 +1006,7 @@ The `:` operator creates a sequence of integers, which is useful for looping a s
 
 ```{r}
 for (i in 1:length(species)) {
-    cat("Species", i, "is", species[i], "\n")
+  cat("Species", i, "is", species[i], "\n")
 }
 ```
 
@@ -963,8 +1027,8 @@ fish <- 10
 penguins_fed <- 0
 
 while (fish >= 3) {
-    fish <- fish - 3
-    penguins_fed <- penguins_fed + 1
+  fish <- fish - 3
+  penguins_fed <- penguins_fed + 1
 }
 cat("Fed", penguins_fed, "penguins with", fish, "fish left over")
 ```
@@ -976,10 +1040,10 @@ Two extra instructions control loops (both `for` and `while`):
 
 ```{r}
 for (mass in body_masses) {
-    if (mass < 3500) {
-        next   # skip light penguins
-    }
-    cat(mass, "\n")
+  if (mass < 3500) {
+    next # skip light penguins
+  }
+  cat(mass, "\n")
 }
 ```
 
@@ -1024,17 +1088,17 @@ body_masses <- c(3750, 3800, 3250, 5200, 3450, 4675, 3650, 5700, 2900, 4400)
 n_large <- 0
 
 for (mass in body_masses) {
-    if (mass > 5000) {
-        cat(mass, "very large\n")
-        n_large <- n_large + 1
-    } else if (mass > 4000) {
-        cat(mass, "large\n")
-        n_large <- n_large + 1
-    } else if (mass < 3000) {
-        cat(mass, "small\n")
-    } else {
-        cat(mass, "medium\n")
-    }
+  if (mass > 5000) {
+    cat(mass, "very large\n")
+    n_large <- n_large + 1
+  } else if (mass > 4000) {
+    cat(mass, "large\n")
+    n_large <- n_large + 1
+  } else if (mass < 3000) {
+    cat(mass, "small\n")
+  } else {
+    cat(mass, "medium\n")
+  }
 }
 
 cat("Number of large or very large penguins:", n_large)
@@ -1248,13 +1312,13 @@ You can write your own functions. For example, here is a function that calculate
 
 ```{r}
 calculate_mean <- function(values) {
-    total <- 0
-    count <- 0
-    for (value in values) {
-        total <- total + value
-        count <- count + 1
-    }
-    return(total / count)
+  total <- 0
+  count <- 0
+  for (value in values) {
+    total <- total + value
+    count <- count + 1
+  }
+  return(total / count)
 }
 ```
 
@@ -1337,16 +1401,16 @@ This isn't very helpful. We can control how our function behaves with `stop()` a
 
 ```{r}
 calculate_mean <- function(values) {
-    total <- 0
-    count <- 0
-    for (value in values) {
-        if (!is.numeric(value)) {
-            stop("Cannot calculate the mean of non-numeric values")
-        }
-        total <- total + value
-        count <- count + 1
+  total <- 0
+  count <- 0
+  for (value in values) {
+    if (!is.numeric(value)) {
+      stop("Cannot calculate the mean of non-numeric values")
     }
-    return(total / count)
+    total <- total + value
+    count <- count + 1
+  }
+  return(total / count)
 }
 ```
 
@@ -1359,17 +1423,17 @@ This is a much more useful message! Alternatively, we might want to carry on but
 
 ```{r}
 calculate_mean <- function(values) {
-    total <- 0
-    count <- 0
-    for (value in values) {
-        if (is.na(value)) {
-            warning("Skipping a missing (NA) value")
-        } else {
-            total <- total + value
-            count <- count + 1
-        }
+  total <- 0
+  count <- 0
+  for (value in values) {
+    if (is.na(value)) {
+      warning("Skipping a missing (NA) value")
+    } else {
+      total <- total + value
+      count <- count + 1
     }
-    return(total / count)
+  }
+  return(total / count)
 }
 
 calculate_mean(c(3750, NA, 3250))
@@ -1406,21 +1470,21 @@ Use it to find the heaviest penguin in `penguins$body_mass_g`, and check the ans
 ::: {#answer6 .callout-caution icon=false title='Answer' collapse="true"}
 ```{r}
 calculate_max <- function(values) {
-    max_value <- NA
+  max_value <- NA
 
-    for (value in values) {
-        if (is.na(value)) {
-            warning("Ignoring a missing (NA) value")
-        } else if (is.na(max_value) || value > max_value) {
-            max_value <- value
-        }
+  for (value in values) {
+    if (is.na(value)) {
+      warning("Ignoring a missing (NA) value")
+    } else if (is.na(max_value) || value > max_value) {
+      max_value <- value
     }
+  }
 
-    if (is.na(max_value)) {
-        stop("Cannot find the maximum: there are no non-missing values")
-    }
+  if (is.na(max_value)) {
+    stop("Cannot find the maximum: there are no non-missing values")
+  }
 
-    return(max_value)
+  return(max_value)
 }
 
 calculate_max(penguins$body_mass_g)
@@ -1483,14 +1547,24 @@ Real-world files are rarely so tidy. To practise, let's *write* a deliberately a
 # use a name like "penguins_semicolon.txt"
 messy_file <- tempfile(fileext = ".txt")
 
-write_lines(c("Palmer penguins data",
-              "Exported for the JGI R course.",
-              "A -1 signifies a missing value.",
-              ""),
-            messy_file)
+write_lines(
+  c(
+    "Palmer penguins data",
+    "Exported for the JGI R course.",
+    "A -1 signifies a missing value.",
+    ""
+  ),
+  messy_file
+)
 
-write_delim(penguins, messy_file, delim = ";", na = "-1",
-            append = TRUE, col_names = TRUE)
+write_delim(
+  penguins,
+  messy_file,
+  delim = ";",
+  na = "-1",
+  append = TRUE,
+  col_names = TRUE
+)
 ```
 
 Open the first few lines to see what we're dealing with:
@@ -1546,12 +1620,11 @@ Finally, R has guessed that `year` is a `dbl` (floating-point number) and that `
 
 ```{r}
 penguins_clean <- read_delim(
-    messy_file,
-    skip = 4,
-    delim = ";",
-    na = "-1",
-    col_types = cols(year = col_integer(),
-                     species = col_factor())
+  messy_file,
+  skip = 4,
+  delim = ";",
+  na = "-1",
+  col_types = cols(year = col_integer(), species = col_factor())
 )
 penguins_clean
 ```
@@ -1603,8 +1676,8 @@ Read `path_to_file("penguins_raw.csv")` with `read_csv()`.
 
 ```{r}
 penguins_raw_csv <- read_csv(
-    path_to_file("penguins_raw.csv"),
-    col_types = cols(`Date Egg` = col_date())
+  path_to_file("penguins_raw.csv"),
+  col_types = cols(`Date Egg` = col_date())
 )
 
 dim(penguins_raw_csv)
@@ -1613,7 +1686,7 @@ mean(penguins_raw_csv$`Culmen Length (mm)`, na.rm = TRUE)
 ```
 
 ```{r}
-first_ten_file <- tempfile(fileext = ".csv")   # or "first_ten.csv"
+first_ten_file <- tempfile(fileext = ".csv") # or "first_ten.csv"
 write_csv(penguins_raw_csv[1:10, ], first_ten_file)
 read_csv(first_ten_file)
 ```
@@ -1717,16 +1790,16 @@ Note that we didn't need quotes around `species`. Inside `dplyr` verbs you can r
 
 ```{r}
 penguins %>%
-    filter(species == "Gentoo") %>%
-    filter(body_mass_g > 5500)
+  filter(species == "Gentoo") %>%
+  filter(body_mass_g > 5500)
 ```
 
 ### `select`: choose columns
 
 ```{r}
 penguins %>% select(species, island, body_mass_g)
-penguins %>% select(-year)                           # everything except year
-penguins %>% select(species, starts_with("bill"))    # helper functions
+penguins %>% select(-year) # everything except year
+penguins %>% select(species, starts_with("bill")) # helper functions
 ```
 
 ### `rename`: rename columns
@@ -1735,26 +1808,28 @@ The syntax is `rename(new_name = old_name)`. This is particularly useful for the
 
 ```{r}
 penguins_raw_csv %>%
-    select(Species, `Culmen Length (mm)`, `Body Mass (g)`) %>%
-    rename(species = Species,
-           bill_length_mm = `Culmen Length (mm)`,
-           body_mass_g = `Body Mass (g)`)
+  select(Species, `Culmen Length (mm)`, `Body Mass (g)`) %>%
+  rename(
+    species = Species,
+    bill_length_mm = `Culmen Length (mm)`,
+    body_mass_g = `Body Mass (g)`
+  )
 ```
 
 ### `mutate`: create or change columns
 
 ```{r}
 penguins %>%
-    mutate(body_mass_kg = body_mass_g / 1000) %>%
-    select(species, body_mass_g, body_mass_kg)
+  mutate(body_mass_kg = body_mass_g / 1000) %>%
+  select(species, body_mass_g, body_mass_kg)
 ```
 
 ### `arrange`: sort rows
 
 ```{r}
 penguins %>%
-    arrange(desc(body_mass_g)) %>%
-    select(species, sex, body_mass_g)
+  arrange(desc(body_mass_g)) %>%
+  select(species, sex, body_mass_g)
 ```
 
 ### Putting it together
@@ -1763,10 +1838,10 @@ The real power comes from chaining these verbs. Here we find the heaviest female
 
 ```{r}
 heavy_adelie <- penguins %>%
-    filter(species == "Adelie", sex == "female") %>%
-    mutate(body_mass_kg = body_mass_g / 1000) %>%
-    select(island, body_mass_kg) %>%
-    arrange(desc(body_mass_kg))
+  filter(species == "Adelie", sex == "female") %>%
+  mutate(body_mass_kg = body_mass_g / 1000) %>%
+  select(island, body_mass_kg) %>%
+  arrange(desc(body_mass_kg))
 
 heavy_adelie
 ```
@@ -1811,25 +1886,25 @@ Using pipes and `dplyr` verbs:
 ::: {#answer8 .callout-caution icon=false title='Answer' collapse="true"}
 ```{r}
 penguins %>%
-    filter(species == "Chinstrap", flipper_length_mm >= 200)
+  filter(species == "Chinstrap", flipper_length_mm >= 200)
 ```
 
 There are 20 of them (we'll see how to count rows directly with `count()` or `nrow()` soon).
 
 ```{r}
 penguins %>%
-    arrange(desc(bill_length_mm)) %>%
-    select(species, island, bill_length_mm) %>%
-    head(5)
+  arrange(desc(bill_length_mm)) %>%
+  select(species, island, bill_length_mm) %>%
+  head(5)
 ```
 
 ```{r}
 penguins %>%
-    mutate(bill_ratio = bill_length_mm / bill_depth_mm) %>%
-    filter(species == "Gentoo") %>%
-    arrange(bill_ratio) %>%
-    select(species, sex, bill_length_mm, bill_depth_mm, bill_ratio) %>%
-    head(1)
+  mutate(bill_ratio = bill_length_mm / bill_depth_mm) %>%
+  filter(species == "Gentoo") %>%
+  arrange(bill_ratio) %>%
+  select(species, sex, bill_length_mm, bill_depth_mm, bill_ratio) %>%
+  head(1)
 ```
 :::
 
@@ -1877,10 +1952,12 @@ Sometimes the *same kind* of value is spread over several columns. Here, the bil
 
 ```{r}
 penguins_long <- penguins %>%
-    mutate(penguin_id = row_number()) %>%
-    pivot_longer(c(bill_length_mm, bill_depth_mm, flipper_length_mm),
-                 names_to = "measurement",
-                 values_to = "value_mm")
+  mutate(penguin_id = row_number()) %>%
+  pivot_longer(
+    c(bill_length_mm, bill_depth_mm, flipper_length_mm),
+    names_to = "measurement",
+    values_to = "value_mm"
+  )
 
 penguins_long %>% select(penguin_id, species, measurement, value_mm)
 ```
@@ -1889,7 +1966,7 @@ Each penguin now has three rows, one per measurement. We added a `penguin_id` co
 
 ```{r}
 penguins_long %>%
-    pivot_wider(names_from = measurement, values_from = value_mm)
+  pivot_wider(names_from = measurement, values_from = value_mm)
 ```
 
 ## Missing values with `drop_na`
@@ -1916,8 +1993,10 @@ Factors protect you against typos (a value that isn't a level becomes `NA`), and
 
 ```{r}
 penguins_factored <- penguins %>%
-    mutate(island = factor(island, levels = c("Torgersen", "Dream", "Biscoe")),
-           year = factor(year))
+  mutate(
+    island = factor(island, levels = c("Torgersen", "Dream", "Biscoe")),
+    year = factor(year)
+  )
 
 levels(penguins_factored$island)
 penguins_factored
@@ -1957,9 +2036,11 @@ Dropping all `NA`s loses 11 rows (mostly penguins of unknown sex); dropping only
 
 ```{r}
 bills_long <- penguins %>%
-    pivot_longer(c(bill_length_mm, bill_depth_mm),
-                 names_to = "bill_measurement",
-                 values_to = "mm")
+  pivot_longer(
+    c(bill_length_mm, bill_depth_mm),
+    names_to = "bill_measurement",
+    values_to = "mm"
+  )
 nrow(bills_long)
 ```
 
@@ -1967,7 +2048,7 @@ It has 688 rows: two rows (one per measurement) for each of the 344 penguins.
 
 ```{r}
 penguins_sex <- penguins %>%
-    mutate(sex = factor(sex, levels = c("male", "female")))
+  mutate(sex = factor(sex, levels = c("male", "female")))
 levels(penguins_sex$sex)
 ```
 :::
@@ -1993,16 +2074,18 @@ For example, the mean body mass of all penguins:
 
 ```{r}
 penguins %>%
-    summarise(mean_body_mass_g = mean(body_mass_g, na.rm = TRUE))
+  summarise(mean_body_mass_g = mean(body_mass_g, na.rm = TRUE))
 ```
 
 We used `na.rm = TRUE` to tell `mean()` to ignore missing values. Without it, the answer would be `NA`. You can calculate several summaries at once:
 
 ```{r}
 penguins %>%
-    summarise(mean_mass = mean(body_mass_g, na.rm = TRUE),
-              sd_mass = sd(body_mass_g, na.rm = TRUE),
-              n_penguins = n())
+  summarise(
+    mean_mass = mean(body_mass_g, na.rm = TRUE),
+    sd_mass = sd(body_mass_g, na.rm = TRUE),
+    n_penguins = n()
+  )
 ```
 
 ## Grouping data
@@ -2011,9 +2094,8 @@ Each row of tidy data is one observation. We can put observations into groups wi
 
 ```{r}
 penguins %>%
-    group_by(species) %>%
-    summarise(mean_mass = mean(body_mass_g, na.rm = TRUE),
-              n_penguins = n())
+  group_by(species) %>%
+  summarise(mean_mass = mean(body_mass_g, na.rm = TRUE), n_penguins = n())
 ```
 
 There's the answer to our question: Gentoo penguins are over 1 kg heavier than the other two species, on average.
@@ -2022,11 +2104,13 @@ We can group by more than one variable:
 
 ```{r}
 penguins %>%
-    drop_na(sex) %>%
-    group_by(species, sex) %>%
-    summarise(mean_mass = mean(body_mass_g),
-              mean_flipper = mean(flipper_length_mm),
-              .groups = "drop")
+  drop_na(sex) %>%
+  group_by(species, sex) %>%
+  summarise(
+    mean_mass = mean(body_mass_g),
+    mean_flipper = mean(flipper_length_mm),
+    .groups = "drop"
+  )
 ```
 
 `.groups = "drop"` removes the grouping from the result (and silences a message about it).
@@ -2049,9 +2133,9 @@ We can `filter()` before grouping. For example, comparing body mass on each isla
 
 ```{r}
 penguins %>%
-    filter(year %in% c(2007, 2009)) %>%
-    group_by(island, year) %>%
-    summarise(mean_mass = mean(body_mass_g, na.rm = TRUE), .groups = "drop")
+  filter(year %in% c(2007, 2009)) %>%
+  group_by(island, year) %>%
+  summarise(mean_mass = mean(body_mass_g, na.rm = TRUE), .groups = "drop")
 ```
 
 `%in%` tests whether each value is in a vector, a handy alternative to chaining `|`.
@@ -2082,28 +2166,30 @@ This grammar (data is filtered, then grouped, then summarised) works so well *be
 ::: {#answer10 .callout-caution icon=false title='Answer' collapse="true"}
 ```{r}
 penguins %>%
-    group_by(species) %>%
-    summarise(mean_flipper = mean(flipper_length_mm, na.rm = TRUE),
-              min_flipper = min(flipper_length_mm, na.rm = TRUE),
-              max_flipper = max(flipper_length_mm, na.rm = TRUE),
-              n = n())
+  group_by(species) %>%
+  summarise(
+    mean_flipper = mean(flipper_length_mm, na.rm = TRUE),
+    min_flipper = min(flipper_length_mm, na.rm = TRUE),
+    max_flipper = max(flipper_length_mm, na.rm = TRUE),
+    n = n()
+  )
 ```
 
 ```{r}
 penguins %>%
-    filter(species == "Adelie") %>%
-    group_by(island) %>%
-    summarise(mean_mass = mean(body_mass_g, na.rm = TRUE)) %>%
-    arrange(desc(mean_mass))
+  filter(species == "Adelie") %>%
+  group_by(island) %>%
+  summarise(mean_mass = mean(body_mass_g, na.rm = TRUE)) %>%
+  arrange(desc(mean_mass))
 ```
 
 The differences between islands are tiny: Adelie penguins on Biscoe are very slightly heavier on average, but only by a few grams.
 
 ```{r}
 penguins %>%
-    drop_na(sex, body_mass_g) %>%
-    group_by(species, sex) %>%
-    summarise(prop_over_4kg = mean(body_mass_g > 4000), .groups = "drop")
+  drop_na(sex, body_mass_g) %>%
+  group_by(species, sex) %>%
+  summarise(prop_over_4kg = mean(body_mass_g > 4000), .groups = "drop")
 ```
 :::
 
@@ -2117,7 +2203,7 @@ Let's start with a scatter plot of flipper length against body mass:
 
 ```{r}
 ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g)) +
-    geom_point()
+  geom_point()
 ```
 
 `ggplot` warns us that it removed two rows with missing values. That's fine, so we won't repeat the warning in the rest of these notes.
@@ -2144,16 +2230,22 @@ These are combined using `+`:
 Adding `colour = species` to the aesthetic colours points by species, and a legend appears automatically:
 
 ```{r}
-ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g, colour = species)) +
-    geom_point()
+ggplot(
+  penguins,
+  aes(x = flipper_length_mm, y = body_mass_g, colour = species)
+) +
+  geom_point()
 ```
 
 We can add more layers. `geom_smooth()` adds a fitted trend line with its uncertainty. Because `colour` is set in `ggplot()`, it applies to *every* layer, so we get one line per species:
 
 ```{r}
-ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g, colour = species)) +
-    geom_point() +
-    geom_smooth(method = "lm")
+ggplot(
+  penguins,
+  aes(x = flipper_length_mm, y = body_mass_g, colour = species)
+) +
+  geom_point() +
+  geom_smooth(method = "lm")
 ```
 
 `method = "lm"` fits a straight line (a *linear model*), which we will explore in the next section.
@@ -2164,22 +2256,22 @@ Different `geom`s show the data in different ways. A histogram shows the distrib
 
 ```{r}
 ggplot(penguins, aes(x = body_mass_g, fill = species)) +
-    geom_histogram(binwidth = 200, alpha = 0.6, position = "identity")
+  geom_histogram(binwidth = 200, alpha = 0.6, position = "identity")
 ```
 
 Boxplots and violin plots compare distributions between groups:
 
 ```{r}
 ggplot(penguins, aes(x = species, y = body_mass_g)) +
-    geom_boxplot()
+  geom_boxplot()
 ```
 
 Aesthetics can also be set in individual layers. Here, the violin is filled by species, but the overlaid points are not:
 
 ```{r}
 ggplot(penguins, aes(x = species, y = body_mass_g)) +
-    geom_violin(aes(fill = species)) +
-    geom_jitter(width = 0.1, alpha = 0.3)
+  geom_violin(aes(fill = species)) +
+  geom_jitter(width = 0.1, alpha = 0.3)
 ```
 
 ## Facets
@@ -2188,8 +2280,8 @@ Facets split a plot into small multiples, one per group. This is where the long 
 
 ```{r}
 ggplot(penguins_long, aes(x = species, y = value_mm, fill = species)) +
-    geom_boxplot() +
-    facet_wrap(~ measurement, scales = "free_y")
+  geom_boxplot() +
+  facet_wrap(~measurement, scales = "free_y")
 ```
 
 ## Labels and themes
@@ -2198,12 +2290,14 @@ ggplot(penguins_long, aes(x = species, y = value_mm, fill = species)) +
 
 ```{r}
 ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm, colour = species)) +
-    geom_point() +
-    labs(title = "Bill dimensions of Palmer penguins",
-         x = "Bill length (mm)",
-         y = "Bill depth (mm)",
-         colour = "Species") +
-    theme_minimal()
+  geom_point() +
+  labs(
+    title = "Bill dimensions of Palmer penguins",
+    x = "Bill length (mm)",
+    y = "Bill depth (mm)",
+    colour = "Species"
+  ) +
+  theme_minimal()
 ```
 
 ## Combining analysis and plotting
@@ -2212,11 +2306,11 @@ Because `ggplot()` takes a tibble as its first argument, we can pipe the results
 
 ```{r}
 penguins %>%
-    drop_na(sex) %>%
-    group_by(species, sex) %>%
-    summarise(mean_mass = mean(body_mass_g), .groups = "drop") %>%
-    ggplot(aes(x = species, y = mean_mass, fill = sex)) +
-    geom_col(position = "dodge")
+  drop_na(sex) %>%
+  group_by(species, sex) %>%
+  summarise(mean_mass = mean(body_mass_g), .groups = "drop") %>%
+  ggplot(aes(x = species, y = mean_mass, fill = sex)) +
+  geom_col(position = "dodge")
 ```
 
 Note the switch from `%>%` to `+` once we are inside `ggplot`!
@@ -2227,16 +2321,16 @@ Plots don't just make results pretty: they can change your conclusions. Let's as
 
 ```{r}
 ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
-    geom_point() +
-    geom_smooth(method = "lm")
+  geom_point() +
+  geom_smooth(method = "lm")
 ```
 
 It looks like the answer is *no*: the longer the bill, the *shallower* it is. But now colour the points by species:
 
 ```{r}
 ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm, colour = species)) +
-    geom_point() +
-    geom_smooth(method = "lm")
+  geom_point() +
+  geom_smooth(method = "lm")
 ```
 
 Within **every** species, longer bills are *deeper*! The overall downward trend appears only because Gentoo penguins have long but shallow bills. When a trend reverses once you split the data into groups, it's called [*Simpson's paradox*](https://en.wikipedia.org/wiki/Simpson%27s_paradox). The lesson: always look at your groups. We'll come back to this when we fit models.
@@ -2287,22 +2381,27 @@ Pipes (`%>%`) pass *data* from one step to the next; inside a `ggplot` you add *
 
 ::: {#answer11 .callout-caution icon=false title='Answer' collapse="true"}
 ```{r}
-ggplot(penguins, aes(x = flipper_length_mm, y = bill_length_mm, colour = species)) +
-    geom_point() +
-    geom_smooth(method = "lm")
+ggplot(
+  penguins,
+  aes(x = flipper_length_mm, y = bill_length_mm, colour = species)
+) +
+  geom_point() +
+  geom_smooth(method = "lm")
 ```
 
 All three species show a positive relationship: penguins with longer flippers tend to have longer bills. The Chinstrap and Adelie lines overlap in flipper length but are separated in bill length.
 
 ```{r}
 ggplot(penguins, aes(x = flipper_length_mm, fill = species)) +
-    geom_histogram(binwidth = 3) +
-    facet_wrap(~ species, ncol = 1) +
-    labs(title = "Flipper length by species",
-         x = "Flipper length (mm)",
-         y = "Number of penguins") +
-    theme_minimal() +
-    theme(legend.position = "none")
+  geom_histogram(binwidth = 3) +
+  facet_wrap(~species, ncol = 1) +
+  labs(
+    title = "Flipper length by species",
+    x = "Flipper length (mm)",
+    y = "Number of penguins"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")
 ```
 
 ```{.r}
@@ -2370,8 +2469,8 @@ and visualise the fit with `geom_smooth(method = "lm")`, which fits the same mod
 
 ```{r}
 ggplot(penguins_complete, aes(x = flipper_length_mm, y = body_mass_g)) +
-    geom_point() +
-    geom_smooth(method = "lm")
+  geom_point() +
+  geom_smooth(method = "lm")
 ```
 
 ### Adding predictors
@@ -2379,8 +2478,10 @@ ggplot(penguins_complete, aes(x = flipper_length_mm, y = body_mass_g)) +
 We can add more predictors with `+` in the formula. Factors such as `species` and `sex` are handled automatically: R compares each level to the first (*reference*) level, here Adelie and female:
 
 ```{r}
-model_full <- lm(body_mass_g ~ flipper_length_mm + species + sex,
-                 data = penguins_complete)
+model_full <- lm(
+  body_mass_g ~ flipper_length_mm + species + sex,
+  data = penguins_complete
+)
 summary(model_full)
 ```
 
@@ -2398,9 +2499,12 @@ The very small p-value says adding species and sex significantly improves the mo
 
 ```{r}
 new_penguins <- tibble(
-    flipper_length_mm = c(190, 210, 230),
-    species = factor(c("Adelie", "Chinstrap", "Gentoo"), levels = levels(penguins$species)),
-    sex = factor(c("female", "male", "male"), levels = levels(penguins$sex))
+  flipper_length_mm = c(190, 210, 230),
+  species = factor(
+    c("Adelie", "Chinstrap", "Gentoo"),
+    levels = levels(penguins$species)
+  ),
+  sex = factor(c("female", "male", "male"), levels = levels(penguins$sex))
 )
 
 predict(model_full, newdata = new_penguins)
@@ -2420,8 +2524,11 @@ par(mfrow = c(1, 1))
 What if the outcome is a category with two values, such as sex? A *generalised linear model* with `family = binomial` (logistic regression) models the probability of one outcome. Here we predict whether a penguin is male from its body mass and bill depth:
 
 ```{r}
-model_sex <- glm(sex ~ body_mass_g + bill_depth_mm + species,
-                 data = penguins_complete, family = binomial)
+model_sex <- glm(
+  sex ~ body_mass_g + bill_depth_mm + species,
+  data = penguins_complete,
+  family = binomial
+)
 summary(model_sex)
 ```
 
@@ -2446,8 +2553,10 @@ The `lme4` package's `lmer()` uses the same formula syntax, plus `(1 | group)` f
 ```{r}
 library(lme4)
 
-model_mixed <- lmer(body_mass_g ~ flipper_length_mm + sex + (1 | species),
-                    data = penguins_complete)
+model_mixed <- lmer(
+  body_mass_g ~ flipper_length_mm + sex + (1 | species),
+  data = penguins_complete
+)
 summary(model_mixed)
 ```
 
@@ -2491,7 +2600,7 @@ First, we select the numeric measurements and scale them, so that body mass (in 
 
 ```{r}
 measurements <- penguins_complete %>%
-    select(bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g)
+  select(bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g)
 
 measurements_scaled <- scale(measurements)
 ```
@@ -2509,10 +2618,10 @@ The first two components capture about 88% of the variation. Let's plot them, co
 
 ```{r}
 pca_scores <- as_tibble(pca$x) %>%
-    mutate(species = penguins_complete$species)
+  mutate(species = penguins_complete$species)
 
 ggplot(pca_scores, aes(x = PC1, y = PC2, colour = species)) +
-    geom_point()
+  geom_point()
 ```
 
 ### k-means clustering
@@ -2549,8 +2658,11 @@ A **decision tree** learns a series of yes/no questions that split the data into
 ```{r}
 library(rpart)
 
-tree <- rpart(species ~ bill_length_mm + bill_depth_mm + flipper_length_mm + body_mass_g,
-              data = penguins_train, method = "class")
+tree <- rpart(
+  species ~ bill_length_mm + bill_depth_mm + flipper_length_mm + body_mass_g,
+  data = penguins_train,
+  method = "class"
+)
 tree
 ```
 
@@ -2608,7 +2720,10 @@ If short on time, skip `glm` and the diagnostic plots, and keep `lm`, `lmer`, k-
 ::: {#answer12 .callout-caution icon=false title='Answer' collapse="true"}
 ```{r}
 model_bill <- lm(bill_depth_mm ~ bill_length_mm, data = penguins_complete)
-model_bill_species <- lm(bill_depth_mm ~ bill_length_mm + species, data = penguins_complete)
+model_bill_species <- lm(
+  bill_depth_mm ~ bill_length_mm + species,
+  data = penguins_complete
+)
 
 coef(model_bill)["bill_length_mm"]
 coef(model_bill_species)["bill_length_mm"]
@@ -2617,8 +2732,11 @@ coef(model_bill_species)["bill_length_mm"]
 Without species, the coefficient is *negative* (longer bills are shallower). Once we account for species, it becomes *positive*: within each species, longer bills are deeper. This is exactly the Simpson's paradox we saw in the plotting section, now in numbers.
 
 ```{r}
-tree_bills <- rpart(species ~ bill_length_mm + bill_depth_mm,
-                    data = penguins_train, method = "class")
+tree_bills <- rpart(
+  species ~ bill_length_mm + bill_depth_mm,
+  data = penguins_train,
+  method = "class"
+)
 
 predicted_bills <- predict(tree_bills, newdata = penguins_test, type = "class")
 table(predicted = predicted_bills, actual = penguins_test$species)
