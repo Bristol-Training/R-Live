@@ -72,7 +72,22 @@ Welcome to this course on R programming and data analysis! This course combines 
 
 R is a popular *programming language* among researchers, data scientists and statisticians across many fields, thanks to its statistical power, visualisation capabilities and extensive package ecosystem. A programming language is a formal system of instructions that lets humans tell a computer what to do. This course shows you how to give those instructions, starting with simple tasks and building up to a complete data analysis.
 
-Throughout the course we will work with data about penguins: the [Palmer Archipelago penguins](https://allisonhorst.github.io/palmerpenguins/) collected by Dr. Kristen Gorman at Palmer Station, Antarctica. The dataset records the species, island, bill size, flipper length, body mass and sex of 344 penguins. It is small enough to understand at a glance but rich enough to do real analysis with.
+![](https://allisonhorst.github.io/palmerpenguins/reference/figures/lter_penguins.png){fig-alt="Illustration of the three penguin species: Chinstrap, Gentoo and Adélie" width=80%}
+
+We use one dataset all the way through the course: the [Palmer Penguins](https://allisonhorst.github.io/palmerpenguins/). It contains measurements of **344 penguins** of **three species** (Adélie, Chinstrap and Gentoo), recorded on **three islands** (Biscoe, Dream and Torgersen) in the Palmer Archipelago, Antarctica, between 2007 and 2009.
+
+| Column | Description |
+|---|---|
+| `species` | Penguin species (Adelie, Chinstrap, Gentoo) |
+| `island` | Island where the penguin was observed (Biscoe, Dream, Torgersen) |
+| `bill_length_mm` | Bill length in millimetres |
+| `bill_depth_mm` | Bill depth in millimetres |
+| `flipper_length_mm` | Flipper length in millimetres |
+| `body_mass_g` | Body mass in grams |
+| `sex` | Penguin sex (female, male) |
+| `year` | Year of the study (2007, 2008, 2009) |
+
+![](https://allisonhorst.github.io/palmerpenguins/reference/figures/culmen_depth.png){fig-alt="Diagram showing how bill length and bill depth are measured on a penguin" width=60%}
 
 ::: {.big-statement}
 344 penguins. One course. Let's find out what makes them different.
