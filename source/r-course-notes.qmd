@@ -72,7 +72,7 @@ Welcome to this course on R programming and data analysis! This course combines 
 
 R is a popular *programming language* among researchers, data scientists and statisticians across many fields, thanks to its statistical power, visualisation capabilities and extensive package ecosystem. A programming language is a formal system of instructions that lets humans tell a computer what to do. This course shows you how to give those instructions, starting with simple tasks and building up to a complete data analysis.
 
-![](https://allisonhorst.github.io/palmerpenguins/reference/figures/lter_penguins.png){fig-alt="Illustration of the three penguin species: Chinstrap, Gentoo and Adélie" width=80%}
+![](https://allisonhorst.github.io/palmerpenguins/reference/figures/lter_penguins.png){fig-alt="Illustration of the three penguin species: Chinstrap, Gentoo and Adélie" width=80% fig-align="center"}
 
 We use one dataset all the way through the course: the [Palmer Penguins](https://allisonhorst.github.io/palmerpenguins/). It contains measurements of **344 penguins** of **three species** (Adélie, Chinstrap and Gentoo), recorded on **three islands** (Biscoe, Dream and Torgersen) in the Palmer Archipelago, Antarctica, between 2007 and 2009. Artwork by @allison_horst.
 
@@ -87,7 +87,17 @@ We use one dataset all the way through the course: the [Palmer Penguins](https:/
 | `sex` | Penguin sex (female, male) |
 | `year` | Year of the study (2007, 2008, 2009) |
 
-![](https://allisonhorst.github.io/palmerpenguins/reference/figures/culmen_depth.png){fig-alt="Diagram showing how bill length and bill depth are measured on a penguin" width=60%}
+<br>
+
+:::: {.columns}
+::: {.column}
+![](https://allisonhorst.github.io/palmerpenguins/reference/figures/culmen_depth.png){fig-alt="Diagram showing how bill length and bill depth are measured on a penguin"}
+:::
+
+::: {.column }
+![](assets/map.png){fig-alt="Map of Antractica showing the three islands used in this dataset: Biscoe, Dream and Torgersen"}
+:::
+::::
 
 ::: {.big-statement}
 344 penguins. One course. Let's find out what makes them different.
